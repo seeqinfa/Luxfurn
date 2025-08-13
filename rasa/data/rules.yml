@@ -1,0 +1,109 @@
+version: "3.1"
+rules:
+- rule: Say hello
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - action: utter_main_menu
+  
+- rule: Show menu on start
+  steps:
+    - intent: show_menu
+    - action: utter_main_menu
+
+- rule: Say goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Escalate to human
+  steps:
+  - intent: escalate
+  - action: utter_escalate
+
+- rule: Handle fallback
+  steps:
+  - intent: nlu_fallback
+  - action: utter_fallback
+
+- rule: Ask help
+  steps:
+  - intent: ask_help
+  - action: utter_ask_help
+
+- rule: Activate feedback form
+  steps:
+    - intent: feedback_request
+    - action: feedback_form
+    - active_loop: feedback_form
+
+- rule: Submit feedback form
+  condition:
+    - active_loop: feedback_form
+  steps:
+    - action: feedback_form
+    - active_loop: null
+    - action: action_store_feedback
+    - action: utter_thank_for_feedback
+
+- rule: Provide recommendation
+  steps:
+  - intent: search_furniture
+  - action: utter_ask_dimensions
+
+#cancel flow
+- rule: Start cancel flow (auto-pick or list)
+  steps:
+    - intent: cancel_order
+    - action: action_pick_order_for_cancel
+
+# After cancel prompt, number typed -> confirm (uses slot-based context)
+- rule: Provide order id -> confirm (cancel context)
+  condition:
+    - slot_was_set:
+        - cancel_context: true
+  steps:
+    - intent: provide_order_id
+    - action: utter_confirm_cancel
+
+# Cover cases where the number is classified as select_order
+- rule: Select order -> confirm (cancel context)
+  condition:
+    - slot_was_set:
+        - cancel_context: true
+  steps:
+    - intent: select_order
+    - action: utter_confirm_cancel
+
+# Confirm / deny
+- rule: Confirm cancel (contextual)
+  steps:
+    - action: utter_confirm_cancel
+    - intent: affirm
+    - action: action_cancel_order
+
+- rule: Deny cancel (contextual)
+  steps:
+    - action: utter_confirm_cancel
+    - intent: deny
+    - action: utter_cancel_aborted
+
+- rule: Start status/info flow (auto-pick or list)
+  steps:
+    - intent: ask_delivery
+    - action: action_pick_order_for_info
+
+# After status prompt, number typed -> details (slot-based context)
+- rule: Provide order id -> details (status context)
+  condition:
+    - slot_was_set:
+        - info_context: true
+  steps:
+    - intent: provide_order_id
+    - action: action_order_details
+
+# Manual: call action directly; it will ask for the item only if missing
+- rule: Manual request
+  steps:
+    - intent: instruction_manual
+    - action: action_get_manual
