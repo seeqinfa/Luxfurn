@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
+RUN a2enmod expires
+RUN a2enmod deflate
 
 # Configure Apache
 RUN echo '<Directory /var/www/html/>' >> /etc/apache2/apache2.conf && \
