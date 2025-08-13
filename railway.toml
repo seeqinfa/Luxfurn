@@ -11,4 +11,3 @@ restartPolicyMaxRetries = 10
 
 [environments.production.variables]
 RASA_ENVIRONMENT = "production"
-PORT = "8080"
