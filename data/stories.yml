@@ -1,0 +1,95 @@
+version: "3.1"
+stories:
+- story: find_furniture
+  steps:
+  - intent: search_furniture
+  - action: utter_ask_dimensions
+  - intent: provide_dimensions
+  - action: utter_example_rec
+
+- story: escalate_to_human
+  steps:
+  - intent: escalate
+  - action: utter_escalate
+
+- story: feedback_request
+  steps:
+  - intent: feedback_request
+  - action: feedback_form
+  - active_loop: feedback_form
+  - slot_was_set:
+    - requested_slot: feedback_rating
+  - slot_was_set:
+    - feedback_rating: "5"
+  - slot_was_set:
+    - requested_slot: feedback_text
+  - slot_was_set:
+    - feedback_text: "Great service!"
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_store_feedback
+  - action: utter_thank_for_feedback
+
+- story: interactive_story_2
+  steps:
+  - intent: search_furniture
+    entities:
+    - furniture_name: chair
+  - slot_was_set:
+    - furniture_name: chair
+  - action: utter_ask_dimensions
+  - intent: provide_dimensions
+  - action: utter_example_rec
+  
+- story: manual direct with entity
+  steps:
+    - intent: instruction_manual
+      entities:
+        - furniture_name: "TV Console"
+    - action: action_get_manual
+
+- story: manual follow-up text
+  steps:
+    - intent: instruction_manual
+    - action: action_get_manual
+    - intent: inform
+      entities:
+        - furniture_name: "Ergo Chair"
+    - action: action_get_manual
+    
+# Story 1: Start the flow — picker runs and then bot LISTENS.
+- story: cancel order start
+  steps:
+    - intent: cancel_order
+    - action: action_pick_order_for_cancel
+
+# Story 2: After the picker listed orders and asked which, user types ID -> confirm -> affirm -> cancel
+- story: cancel order provide id and confirm
+  steps:
+    - action: utter_ask_which_order_cancel
+    - intent: provide_order_id
+      entities:
+        - order_id: "any_id"
+    - slot_was_set:
+        - order_id: "any_id"
+    - action: utter_confirm_cancel
+    - intent: affirm
+    - action: action_cancel_order
+
+# Story 3: Start the flow — picker runs and then bot LISTENS.
+- story: check order start
+  steps:
+    - intent: ask_delivery
+    - action: action_pick_order_for_info
+
+# Story 4: After the picker listed orders and asked which, user types ID -> details
+- story: check order provide id to details
+  steps:
+    - action: utter_ask_which_order_status
+    - intent: provide_order_id
+      entities:
+        - order_id: "any_id"
+    - slot_was_set:
+        - order_id: "any_id"
+    - action: action_order_details

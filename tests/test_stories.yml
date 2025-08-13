@@ -1,0 +1,184 @@
+#### This file contains tests to evaluate that your bot behaves as expected.
+#### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
+version: "3.1"
+stories:rasa test core --stories tests/test_stories.yml
+- story: happy path 1
+  steps:
+  - user: |
+      hello there!
+    intent: greet
+  - action: utter_greet
+  - user: |
+      amazing
+    intent: mood_great
+  - action: utter_happy
+
+- story: happy path 2
+  steps:
+  - user: |
+      hello there!
+    intent: greet
+  - action: utter_greet
+  - user: |
+      amazing
+    intent: mood_great
+  - action: utter_happy
+  - user: |
+      bye-bye!
+    intent: goodbye
+  - action: utter_goodbye
+
+- story: sad path 1
+  steps:
+  - user: |
+      hello
+    intent: greet
+  - action: utter_greet
+  - user: |
+      not good
+    intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - user: |
+      yes
+    intent: affirm
+  - action: utter_happy
+
+- story: sad path 2
+  steps:
+  - user: |
+      hello
+    intent: greet
+  - action: utter_greet
+  - user: |
+      not good
+    intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - user: |
+      not really
+    intent: deny
+  - action: utter_goodbye
+
+- story: sad path 3
+  steps:
+  - user: |
+      hi
+    intent: greet
+  - action: utter_greet
+  - user: |
+      very terrible
+    intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - user: |
+      no
+    intent: deny
+  - action: utter_goodbye
+
+- story: say goodbye
+  steps:
+  - user: |
+      bye-bye!
+    intent: goodbye
+  - action: utter_goodbye
+
+- story: bot challenge
+  steps:
+  - user: |
+      are you a bot?
+    intent: bot_challenge
+  - action: utter_iamabot
+
+# --- Direct ask with entity present (no follow-up question needed) ---
+- story: manual direct - Ergo Chair
+  steps:
+    - user: |
+        I need the manual for [Ergo Chair](furniture_name)
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - action: manual_form
+    - active_loop: null
+    - slot_was_set:
+        - manual_furniture: "Ergo Chair"
+    - action: action_get_manual
+
+- story: manual direct - TV Console (lowercase)
+  steps:
+    - user: |
+        manual for [tv console](furniture_name)
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - action: manual_form
+    - active_loop: null
+    - slot_was_set:
+        - manual_furniture: "tv console"
+    - action: action_get_manual
+
+# --- Two-turn flow: bot asks which furniture, user answers ---
+- story: manual two-turn - Coffee Table
+  steps:
+    - user: |
+        instruction manual please
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - user: |
+        [Coffee Table](furniture_name)
+      intent: inform
+    - action: manual_form
+    - active_loop: null
+    - slot_was_set:
+        - manual_furniture: "Coffee Table"
+    - action: action_get_manual
+
+- story: manual two-turn - Queen Bed Frame (lowercase answer)
+  steps:
+    - user: |
+        I need the instruction manual
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - user: |
+        [queen bed frame](furniture_name)
+      intent: inform
+    - action: manual_form
+    - active_loop: null
+    - slot_was_set:
+        - manual_furniture: "queen bed frame"
+    - action: action_get_manual
+
+# --- Guard: form should NOT jump to provide_dimensions mid-collection ---
+- story: manual form ignores dimensions
+  steps:
+    - user: |
+        instruction manual
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - user: |
+        200x100x80
+      intent: provide_dimensions
+    - action: manual_form          # stays in the form, asks for the furniture again
+    - active_loop: manual_form
+    - user: |
+        [Recliner Seat](furniture_name)
+      intent: inform
+    - action: manual_form
+    - active_loop: null
+    - slot_was_set:
+        - manual_furniture: "Recliner Seat"
+    - action: action_get_manual
+
+# --- Unknown product -> form asks again (your validator not added yet, so it will likely re-ask) ---
+- story: manual unknown product
+  steps:
+    - user: |
+        manual for [dragon throne](furniture_name)
+      intent: instruction_manual
+    - action: manual_form
+    - active_loop: manual_form
+    - action: manual_form          # likely re-asks; depending on your NLU this entity may not be extracted
+    - active_loop: manual_form

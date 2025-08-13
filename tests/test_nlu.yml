@@ -1,0 +1,17 @@
+version: "3.1"
+nlu:
+
+- intent: instruction_manual
+  examples: |
+    - I need the manual for [Ergo Chair](furniture_name)
+    - manual for [tv console](furniture_name)
+    - show me the instructions for the [Recliner Seat](furniture_name)
+    - assembly guide for [Queen Bed Frame](furniture_name)
+    - where is the product manual for [Bookshelf Classic](furniture_name)?
+
+- intent: inform
+  examples: |
+    - [Coffee Table](furniture_name)
+    - [queen bed frame](furniture_name)
+    - [tv console](furniture_name)
+    - [recliner seat](furniture_name)
