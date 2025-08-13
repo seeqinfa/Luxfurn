@@ -1,0 +1,353 @@
+html,
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: -50px;
+    background: url(../img/L.jpg) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed; 
+    margin: 0;
+    padding: 0;
+}
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index:99;
+}
+
+.logo{
+    font-size: 2em;
+    color: white;
+    user-select: none;
+}
+
+.navigation a{
+    position: relative;
+    font-size: 1.1em;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+
+}
+
+.navigation a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+    transform:scaleX(0);
+    transition: transform .5s;
+}
+
+.navigation a:hover::after{
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+.navigation .btnLogin{
+    width: 130px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid white;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: white;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navigation .btnLogin:hover{
+    background: white;
+    color: black;
+}
+
+.wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.wrapper.active-popup {
+    transform: scale(1);
+}
+
+.wrapper .form-box {
+    width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.icon-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background: black;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+
+.form-box h2{
+    font-size: 2em;
+    color: black;
+    text-align: center;
+}
+
+.input-box{
+    position:relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid black;
+    margin: 30px 0;
+}
+
+.input-box label{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 1em;
+    color: black;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label{
+    top: -5px;
+}
+
+.input-box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border:none;
+    outline: none;
+    font-size:1em;
+    color:black;
+    font-weight: 600;
+    padding: 0 35px 0 5px;
+}
+
+.input-box .icon{
+    position: absolute;
+    right: 8px;
+    font-size: 1.2em;
+    color: black;
+    line-height: 57px;
+}
+
+.remember-forgot{
+    font-size:.9em;
+    color: black;
+    font-weight: 500;
+    margin: -15px 0 15px;
+    justify-content: space-between;
+}
+
+.remember-forgot label input{
+    accent-color:black;
+    margin-right:3px;
+}
+
+.remember-forgot a{
+    color:black;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover{
+    text-decoration: underline;
+}
+
+.btn{
+    width: 100%;
+    height: 45px;
+    background: black;
+    border:none;
+    outline:none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size:1em;
+    color:white;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;               
+    justify-content: center;    
+    align-items: center;        
+}
+
+.login-register{
+    font-size: .9em;
+    color: black;
+    text-align: center;
+    font-weight: 500;
+    margin: 25px 0 10px;
+}
+
+.login-register p a{
+    color: black;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-register p a:hover{
+    text-decoration: underline;
+}
+
+.select-box{
+    background: transparent;
+    border-color:black;
+    font-size: 1em;
+    border-radius: 8px;
+}
+
+.select-menu{
+    position:relative;
+    width: 100%;
+    height: 30px;
+    margin: 30px 0;
+}
+
+/* Style for the pop-up */
+#pop-up-message {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f9f9f9;
+    padding: 20px;
+    padding-top: 40px; /* Extra padding to make space for the button */
+    border: 1px solid #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    box-sizing: border-box;
+    z-index: 1; /* Sit on top */
+
+}
+
+/* Style for the close button */
+#pop-up-message button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#pop-up-message button:hover {
+    background: #ff3b3b;
+}
+
+
+.pagination {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: white;
+    color: #e67e22;
+    font-weight: bold;
+    border: 1px solid #e67e22;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination a:hover {
+    background-color: #e67e22;
+    color: white;
+}
+
+.pagination a.active {
+    background-color: #e67e22;
+    color: white;
+    pointer-events: none;
+    border-color: #c15500;
+}
+
+.card .btn {
+    padding: 10px 16px  ;
+    border-radius: 6px;
+    background-color: #e67e22;
+    color: white;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.card .btn:hover {
+    background-color: #c15500;
+    transform: scale(1.03);
+}
+
+.card .actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.success-message {
+    color: #2ecc71;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #eafaf1;
+    border-radius: 6px;
+    border-left: 4px solid #2ecc71;
+}
