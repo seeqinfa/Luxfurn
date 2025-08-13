@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --only-binary=all -r requirements.txt
 
-# Copy Rasa project files
+# Copy all Rasa project files from the rasa directory
 COPY . .
 
 # Skip training in Docker build - do it at runtime if needed

@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "rasa/Dockerfile"
+buildCommand = "cd rasa"
 
 [deploy]
 startCommand = "/app/start.sh"
